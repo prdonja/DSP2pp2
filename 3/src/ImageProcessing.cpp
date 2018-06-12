@@ -4,6 +4,12 @@
 
 #include <QDebug>
 
+int roundit(int x)
+{
+	return x - (x % 4);
+}
+
+
 void imageProcessingFun(const QString& progName, QImage* const outImgs, const QImage* const inImgs, const QVector<double>& params) 
 {
 	int X_SIZE = inImgs->width();
@@ -16,8 +22,8 @@ void imageProcessingFun(const QString& progName, QImage* const outImgs, const QI
 		/* Input image data in RGB format can be obtained with inImgs->bits() */
 		/* Vertical scale factor is params[0] */
 		/* Horizontal scale factor is params[1] */
-		int newXSize = (int)ceil(X_SIZE * params[1]);
-		int newYSize = (int)ceil(Y_SIZE * params[0]);
+		int newXSize = roundit(X_SIZE * params[1]);
+		int newYSize = roundit(Y_SIZE * params[0]);
 
 		/* TO DO: Calculate output image resolution and construct output image object */
 		new (outImgs) QImage(newXSize, newYSize, inImgs->format());
@@ -32,8 +38,8 @@ void imageProcessingFun(const QString& progName, QImage* const outImgs, const QI
 		/* Input image data in RGB format can be obtained with inImgs->bits() */
 		/* Vertical scale factor is params[0] */
 		/* Horizontal scale factor is params[1] */
-		int newXSize = (int)ceil(X_SIZE * params[1]);
-		int newYSize = (int)ceil(Y_SIZE * params[0]);
+		int newXSize = roundit(X_SIZE * params[1]);
+		int newYSize = roundit(Y_SIZE * params[0]);
 
 		/* TO DO: Calculate output image resolution and construct output image object */
 		new (outImgs) QImage(newXSize, newYSize, inImgs->format());
@@ -46,19 +52,26 @@ void imageProcessingFun(const QString& progName, QImage* const outImgs, const QI
 		/* Input image data in RGB format can be obtained with inImgs->bits() */
 		/* k1 and k2 parameters are given as params[0] and params[1]*/
 
+		double amplitude = params[0];
+		double frequency = params[1];
+
 		/* TO DO: Construct output image object */
+		new (outImgs) QImage(X_SIZE, Y_SIZE, inImgs->format());
 
 		/* TO DO: Perform image transformation */
+		imageTransform(inImgs->bits(), X_SIZE, Y_SIZE, outImgs->bits(), amplitude, frequency);
 	
 	}
 	else if (progName == "Transform Bilinear") 
 	{
 		/* Input image data in RGB format can be obtained with inImgs->bits() */
 		/* k1 and k2 parameters are given as params[0] and params[1]*/
-		
+		double amplitude = params[0];
+		double frequency = params[1];
 		/* TO DO: Construct output image object */
-
+		new (outImgs) QImage(X_SIZE, Y_SIZE, inImgs->format());
 		/* TO DO: Perform image transformation with bilinear interpolation */
+		imageTransform(inImgs->bits(), X_SIZE, Y_SIZE, outImgs->bits(), amplitude, frequency);
 	}
 
 }

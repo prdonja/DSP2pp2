@@ -38,8 +38,8 @@ void bilinearInterpolate(const uchar input[], int xSize, int ySize, uchar output
 		{
 			int I = (i)* mX;
 			int J = (j)* mY;
-			double a = j / mY - floor(j / mY);
-			double b = i / mX - floor(i / mX);
+			double a = j * mY - floor(j / mY);
+			double b = i * mX - floor(i / mX);
 
 			output[3 * i + j * newXSize * 3] =
 				(1 - a) * (1 - b) * input[3 * I + J * xSize * 3] +
@@ -74,13 +74,13 @@ void imageTransform(const uchar input[], int xSize, int ySize, uchar output[], d
 		for (int j = 0; j < ySize; j++)
 		{
 
-			int I = i + k1 * xSize * sin(2 * 3.14* j / (ySize*k2));
+			int J = j + k1 * xSize * sin(2 * 3.14* j / (ySize*k2));
 
-			if (I >= 0 && I < xSize && j >= 0 && j < ySize) {
+			if (J >= 0 && J < xSize && i >= 0 && i < ySize) {
 
-				output[3 * i + j * xSize * 3] = input[3 * I + j * xSize * 3];
-				output[3 * i + 1 + j * xSize * 3] = input[3 * I + 1 + j * xSize * 3];
-				output[3 * i + 2 + j * xSize * 3] = input[3 * I + 2 + j * xSize * 3];
+				output[3 * i + j * xSize * 3] = input[3 * i + J * xSize * 3];
+				output[3 * i + 1 + j * xSize * 3] = input[3 * i + 1 + J * xSize * 3];
+				output[3 * i + 2 + j * xSize * 3] = input[3 * i + 2 + J * xSize * 3];
 			}
 			else {
 				output[3 * i + j * xSize * 3] = 0;
@@ -99,14 +99,14 @@ void imageTransformBilinear(const uchar input[], int xSize, int ySize, uchar out
 		for (int j = 0; j < ySize; j++)
 		{
 
-			double pomI = i + k1 * xSize * sin(2 * 3.14* j / (ySize*k2));
-			double pomJ = i + k1 * xSize * sin(2 * 3.14* j / (ySize*k2));
+			double pomI = i;
+			double pomJ = j + k1 * xSize * sin(2 * 3.14* j / (ySize*k2));
 
 			int pomI1 = floor(pomI);
 			int pomJ2 = floor(pomJ);
 
-			double b = pomJ - pomJ2;
-			double a = pomI - pomI1;
+			double a = pomJ - pomJ2;
+			double b = pomI - pomI1; // 0
 
 			if (pomI1 >= 0 && pomI1 + 1 < xSize && pomJ2 >= 0 && pomJ2 + 1 < ySize)
 			{
